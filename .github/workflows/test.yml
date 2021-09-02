@@ -15,7 +15,7 @@ jobs:
       with:
         owner: virtualidentityag
         github-token: ${{ secrets.github_token }}
-        package: "infineon-myinfineon-service%2Finfineon-myinfineon-service"
+        package: "infineon-myinfineon-service/infineon-myinfineon-service"
         number-of-release-candidates-to-keep: 1
         number-of-snapshots-to-keep: 1
         number-of-feature-snapshots-to-keep: 1

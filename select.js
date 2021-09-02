@@ -54,7 +54,7 @@ try {
     return new Date(b.updated_at) - new Date(a.updated_at);
   }
 
-  let url =  'https://api.github.com/orgs/' + owner + '/packages/container/' + packageName + '/versions?package_type=container&visibility=internal';
+  let url =  'https://api.github.com/orgs/' + owner + '/packages/container/' + encodeURIComponent(packageName) + '/versions?package_type=container&visibility=internal';
   console.log(url);
 
   fetch('https://api.github.com/orgs/' + owner + '/packages/container/' + packageName + '/versions?package_type=container&visibility=internal', {
