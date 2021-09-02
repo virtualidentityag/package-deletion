@@ -31,7 +31,7 @@ try {
 
     let allVersions = releaseCandidatesToDelete.concat(snapshotsToDelete, featureBranchesToDelete);
 
-    return allVersions.map(version => version.id).join();
+    return allVersions.map(version => version.version).join();
   }
 
   function filterSortAndSlice(mappedData, regex, numberToKeep) {
