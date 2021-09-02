@@ -10,8 +10,6 @@ try {
   const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
 
   function filterVersionsNew(json) {
-    console.log(json);
-
     let mappedData = json.filter(e => {
       return e.metadata.container.tags.length > 0;
     }).map(e => {
@@ -33,7 +31,7 @@ try {
 
     let allVersions = releaseCandidatesToDelete.concat(snapshotsToDelete, featureBranchesToDelete);
 
-    return allVersions.map(version => version.version).join();
+    return allVersions.map(version => version.id).join();
   }
 
   function filterSortAndSlice(mappedData, regex, numberToKeep) {
