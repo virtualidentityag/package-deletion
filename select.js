@@ -52,7 +52,10 @@ try {
       'authorization': `token ${token}`,
     }
   })
-      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        res.json();
+      })
       .then(resJson => filterVersionsNew(resJson))
       .then(versionIds => core.setOutput("versionIds", versionIds));
 

@@ -14,7 +14,7 @@ jobs:
       id: version-selector
       with:
         owner: virtualidentityag
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.VISUDOBOT_ORGSECRET_ALLREPOS_READWRITE }}
         package: "infineon-myinfineon-service/infineon-myinfineon-service"
         number-of-release-candidates-to-keep: 1
         number-of-snapshots-to-keep: 1
