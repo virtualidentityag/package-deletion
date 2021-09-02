@@ -10,6 +10,8 @@ try {
   const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
 
   function filterVersionsNew(json) {
+    console.log(json);
+
     let mappedData = json.filter(e => {
       return e.metadata.container.tags.length > 0;
     }).map(e => {
@@ -52,10 +54,7 @@ try {
       'authorization': `token ${token}`,
     }
   })
-      .then(res => {
-        console.log(res);
-        res.json();
-      })
+      .then(res => res.json())
       .then(resJson => filterVersionsNew(resJson))
       .then(versionIds => core.setOutput("versionIds", versionIds));
 
