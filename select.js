@@ -10,8 +10,6 @@ try {
   const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
 
   function filterVersionsNew(json) {
-    console.log(json);
-
     let mappedData = json.filter(e => {
       return e.metadata.container.tags.length > 0;
     }).map(e => {
@@ -46,6 +44,8 @@ try {
   }
 
   function deleteVersions(versions) {
+    console.log(versions);
+
     if (versions === undefined) {
       console.log("Nothing to delete");
 
