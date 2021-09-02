@@ -10,6 +10,15 @@ try {
   const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
 
   function filterVersionsNew(json) {
+    console.log(json);
+
+    console.log(owner);
+    console.log(packageName);
+    console.log(token);
+    console.log(numberOfRcToKeep);
+    console.log(numberOfSnapshotsToKeep);
+    console.log(numberOfFeatureSnapshotsToKeep);
+
     let mappedData = json.filter(e => {
       return e.metadata.container.tags.length > 0;
     }).map(e => {
