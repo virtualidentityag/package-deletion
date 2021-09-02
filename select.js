@@ -1,106 +1,61 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 require('isomorphic-fetch');
 
 try {
+  const owner = core.getInput('owner');
+  const packageName = core.getInput('package').toLowerCase();
+  const token = core.getInput('github-token');
+  const numberOfRcToKeep = core.getInput('number-of-release-candidates-to-keep');
+  const numberOfSnapshotsToKeep = core.getInput('number-of-snapshots-to-keep');
+  const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
 
-    const owner = core.getInput('owner');
-    const repositoryName =  core.getInput('repository').split("/").slice(-1);
-    const packageName = core.getInput('package').toLowerCase();
-    const filterString = core.getInput('filter');
-    const keep = core.getInput('keep');
-    const token = core.getInput('github-token');
+  function filterVersionsNew(json) {
+    let mappedData = json.filter(e => {
+      return e.metadata.container.tags.length > 0;
+    }).map(e => {
+      let data = {};
+      data.id = e.id;
+      data.version = e.metadata.container.tags[0];
+      data.updated_at = e.updated_at;
+      return data;
+    });
 
-    function filterVersions(json) {
+    // Filter out release candidates
+    let releaseCandidatesToDelete = filterSortAndSlice(mappedData, /^[0-9]+\.[0-9]+\.[0-9]+-rc.*$/gi, numberOfRcToKeep);
 
-        try {
-            // filter for package in repository
-            let packages = json.data.repository.packages.edges.filter(element => {
-                return element.node.name === packageName;
-            });
+    // Filter out snapshots
+    let snapshotsToDelete = filterSortAndSlice(mappedData, /^[0-9]+\.[0-9]+\.[0-9]+-snapshot$/gi, numberOfSnapshotsToKeep);
 
-            // exit if no matching packages found
-            if (packages.length == 0) {
-                console.log("No matching packages found in this repository.");
-                process.exit(0);
-            }
+    // Filter out feature branches
+    let featureBranchesToDelete = filterSortAndSlice(mappedData, /^[0-9]+\.[0-9]+\.[0-9]+-snapshot-.*$/gi, numberOfFeatureSnapshotsToKeep);
 
-            // filter for specific version names containing in package versions
-            let versions = packages[0].node.versions.edges.filter(element => {
-                return element.node.version.indexOf(filterString) > -1;
-            });
+    let allVersions = releaseCandidatesToDelete.concat(snapshotsToDelete, featureBranchesToDelete);
 
-            // exit if no maching versions found
-            if (versions.length == 0) {
-                console.log("No matching versions for \"" + filterString + "\" found for this package.");
-                process.exit(0);
-            }
+    return allVersions.join();
+  }
 
-            console.log("\nMatching versions for \"" + filterString + "\":");
+  function filterSortAndSlice(mappedData, regex, numberToKeep) {
+    return mappedData
+        .filter(e => regex.test(e.version))
+        .sort((a, b) => sortByDateDescending(a, b))
+        .slice(numberToKeep, this.length);
+  }
 
-            // collect ids from filtered versions
-            let versionIds = versions.map(element => {
-                console.log(element.node.version);
-                return element.node.id;
-            });
+  function sortByDateDescending(a, b) {
+    return new Date(b.updated_at) - new Date(a.updated_at);
+  }
 
-
-            // calculate number of versions that can be selected
-            let sliceNumber = versionIds.length - keep;
-
-            console.log("\nKeep latest " + keep + " versions...");
-            console.log("Select the oldest " + sliceNumber + " versions...");
-
-            if ( sliceNumber > 0 ) {
-                // select the oldest versions
-                let selectedIds = versionIds.slice(0, sliceNumber);
-                console.log(selectedIds);
-                // return the selected versions as comma separated string
-                return selectedIds.join();
-            }
-
-            // return empty string if no versions are selected
-            return "";
-
-        } catch(e) {
-            console.log(e);
-            return process.exit(-1);
-        }
+  fetch('https://api.github.com/orgs/' + owner + '/packages/container/' + packageName + '/versions?package_type=container&visibility=internal', {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'authorization': `token ${token}`,
     }
-
-    fetch('https://api.github.com/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/vnd.github.packages-preview+json',
-                'authorization': `token ${token}`,
-            },
-            body: JSON.stringify({
-                query: `{
-                  repository(owner: "${owner}", name: "${repositoryName}") {
-                    packages(first: 1, names: ["${packageName}"]) {
-                      edges {
-                        node {
-                          name
-                          versions(last: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
-                            edges {
-                              node {
-                                id
-                                version
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }`
-            }),
-    })
-    .then(res => res.json())
-    .then(resJson => filterVersions(resJson))
-    .then(versionIds => core.setOutput("versionids", versionIds));
+  })
+      .then(res => res.json())
+      .then(resJson => filterVersionsNew(resJson))
+      .then(versionIds => core.setOutput("versionIds", versionIds));
 
 } catch (error) {
-    core.setFailed(error.message);
+  core.setFailed(error.message);
 }

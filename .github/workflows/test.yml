@@ -14,11 +14,11 @@ jobs:
       id: version-selector
       with:
         owner: virtualidentityag
-        repository: ${{ github.repository }}
         github-token: ${{ secrets.github_token }}
-        package: "package-version-selector"
-        keep: 1
-        filter: "SNAPSHOT-"
+        package: "infineon-myinfineon-service%2Finfineon-myinfineon-service"
+        number-of-release-candidates-to-keep: 1
+        number-of-snapshots-to-keep: 1
+        number-of-feature-snapshots-to-keep: 1
 
-    - run: echo ::set-env name=APPENDIX::${{ steps.version-selector.outputs.versionids }}
+    - run: echo ::set-env name=APPENDIX::${{ steps.version-selector.outputs.versionIds }}
     - run: echo ${{ env.APPENDIX }}
