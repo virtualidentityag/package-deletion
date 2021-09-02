@@ -10,6 +10,8 @@ try {
   const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
 
   function filterVersionsNew(json) {
+    console.log(json);
+
     let mappedData = json.filter(e => {
       return e.metadata.container.tags.length > 0;
     }).map(e => {
@@ -64,7 +66,7 @@ try {
         'Accept': 'application/vnd.github.v3+json',
         'authorization': `token ${token}`,
       }
-    }).then(res => console.log("[" + res.status + "]Successfully deleted version " + version.version));
+    }).then(res => console.log("[" + res.status + "] Successfully deleted version " + version.version));
   }
 
   fetch('https://api.github.com/orgs/' + owner + '/packages/container/' + encodeURIComponent(packageName) + '/versions?package_type=container&visibility=internal', {
