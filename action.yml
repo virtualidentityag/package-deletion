@@ -4,24 +4,23 @@ inputs:
   owner:
     description: "Repository owner or organization"
     required: true
-  repository:
-    description: "Repository name"
-    required: true
   package:
     description: "Package name"
     required: true
-  filter:
-    description: 'Filter string to get versions by name (optional)'
-    required: false
-  keep:
-    description: "Number of versions to keep (default: 5)(optional)"
-    reqired: false
-    default: 5
+  number-of-release-candidates-to-keep:
+    description: "Number of versions to keep"
+    required: true
+  number-of-snapshots-to-keep:
+    description: "Number of versions to keep"
+    required: true
+  number-of-feature-snapshots-to-keep:
+    description: "Number of versions to keep"
+    required: true
   github-token:
     description: "Github token (use secrets.GITHUB_TOKEN)"
     required: true
 outputs:
-  versionids:
+  versionIds:
     description: 'Array of selected version ids'
 runs:
   using: 'node12'
