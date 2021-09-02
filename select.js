@@ -29,9 +29,7 @@ try {
     // Filter out feature branches
     let featureBranchesToDelete = filterSortAndSlice(mappedData, /^[0-9]+\.[0-9]+\.[0-9]+-snapshot-.*$/gi, numberOfFeatureSnapshotsToKeep);
 
-    let allVersions = releaseCandidatesToDelete.concat(snapshotsToDelete, featureBranchesToDelete);
-
-    return allVersions.map(version => version.version).join();
+    return releaseCandidatesToDelete.concat(snapshotsToDelete, featureBranchesToDelete);
   }
 
   function filterSortAndSlice(mappedData, regex, numberToKeep) {
@@ -45,6 +43,30 @@ try {
     return new Date(b.updated_at) - new Date(a.updated_at);
   }
 
+  function deleteVersions(versions) {
+    if (versions === undefined) {
+      console.log("Nothing to delete");
+
+      return "";
+    }
+
+    versions.forEach(version => deleteVersion(version));
+
+    return versions.map(version => version.version).join();
+  }
+
+  function deleteVersion(version) {
+    console.log("Deleting version " + version.version);
+
+    fetch('https://api.github.com/orgs/' + owner + '/packages/container/' + encodeURIComponent(packageName) + '/versions/' + version.id + '?package_type=container&visibility=internal', {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'authorization': `token ${token}`,
+      }
+    }).then(res => console.log("[" + res.status + "]Successfully deleted version " + version.version));
+  }
+
   fetch('https://api.github.com/orgs/' + owner + '/packages/container/' + encodeURIComponent(packageName) + '/versions?package_type=container&visibility=internal', {
     method: 'GET',
     headers: {
@@ -54,6 +76,7 @@ try {
   })
       .then(res => res.json())
       .then(resJson => filterVersionsNew(resJson))
+      .then(versions => deleteVersions(versions))
       .then(versionIds => core.setOutput("versionIds", versionIds));
 
 } catch (error) {
