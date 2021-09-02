@@ -9,7 +9,7 @@ try {
   const numberOfSnapshotsToKeep = core.getInput('number-of-snapshots-to-keep');
   const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
 
-  function filterVersionsNew(json) {
+  function filterVersions(json) {
     let mappedData = json.filter(e => {
       return e.metadata.container.tags.length > 0;
     }).map(e => {
@@ -44,9 +44,7 @@ try {
   }
 
   function deleteVersions(versions) {
-    console.log(versions);
-
-    if (versions === undefined) {
+    if (versions === undefined || versions.length === 0) {
       console.log("Nothing to delete");
 
       return "";
@@ -77,7 +75,7 @@ try {
     }
   })
       .then(res => res.json())
-      .then(resJson => filterVersionsNew(resJson))
+      .then(resJson => filterVersions(resJson))
       .then(versions => deleteVersions(versions))
       .then(versionIds => core.setOutput("versionIds", versionIds));
 
