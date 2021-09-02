@@ -10,15 +10,6 @@ try {
   const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
 
   function filterVersionsNew(json) {
-    console.log(json);
-
-    console.log(owner);
-    console.log(packageName);
-    console.log(token);
-    console.log(numberOfRcToKeep);
-    console.log(numberOfSnapshotsToKeep);
-    console.log(numberOfFeatureSnapshotsToKeep);
-
     let mappedData = json.filter(e => {
       return e.metadata.container.tags.length > 0;
     }).map(e => {
@@ -54,10 +45,7 @@ try {
     return new Date(b.updated_at) - new Date(a.updated_at);
   }
 
-  let url =  'https://api.github.com/orgs/' + owner + '/packages/container/' + encodeURIComponent(packageName) + '/versions?package_type=container&visibility=internal';
-  console.log(url);
-
-  fetch('https://api.github.com/orgs/' + owner + '/packages/container/' + packageName + '/versions?package_type=container&visibility=internal', {
+  fetch('https://api.github.com/orgs/' + owner + '/packages/container/' + encodeURIComponent(packageName) + '/versions?package_type=container&visibility=internal', {
     method: 'GET',
     headers: {
       'Accept': 'application/vnd.github.v3+json',
