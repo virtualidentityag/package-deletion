@@ -18,7 +18,7 @@ jobs:
         package: "infineon-myinfineon-service/infineon-myinfineon-service"
         number-of-release-candidates-to-keep: 5
         number-of-snapshots-to-keep: 5
-        number-of-feature-snapshots-to-keep: 5
+        number-of-feature-snapshots-to-keep: 3
 
     - run: echo "APPENDIX=${{ steps.version-selector.outputs.versionIds }}" >> $GITHUB_ENV
     - run: echo "${{ env.APPENDIX }}"
