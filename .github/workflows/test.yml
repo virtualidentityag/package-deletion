@@ -20,5 +20,5 @@ jobs:
         number-of-snapshots-to-keep: 1
         number-of-feature-snapshots-to-keep: 1
 
-    - run: echo ::set-env name=APPENDIX::${{ steps.version-selector.outputs.versionIds }}
+    - run: (echo ${{ steps.version-selector.outputs.versionIds }}) >> $GITHUB_ENV
     - run: echo ${{ env.APPENDIX }}
