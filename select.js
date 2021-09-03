@@ -21,8 +21,7 @@ const main = async () => {
           console.log("[" + res.status + "] Successfully loaded packages");
           return res.json();
         } else {
-          console.log("[" + res.status + "] Something went wrong " + res.json());
-          return undefined;
+          throw "[" + res.status + "] Something went wrong";
         }
       })
       .then(resJson => filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep))
@@ -103,5 +102,6 @@ function deleteVersion(version, owner, packageName, token) {
 }
 
 main().catch(error => {
+  console.log("i am here");
   core.setFailed(error.message);
 });
