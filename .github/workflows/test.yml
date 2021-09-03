@@ -14,7 +14,7 @@ jobs:
       id: version-selector
       with:
         owner: virtualidentityag
-        github-token: 123 #${{ secrets.GH_PACKAGES_DELETE }}
+        github-token: ${{ secrets.TOKEN }}
         package: "infineon-myinfineon-service/infineon-myinfineon-service"
         number-of-release-candidates-to-keep: 5
         number-of-snapshots-to-keep: 5

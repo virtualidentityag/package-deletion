@@ -102,6 +102,5 @@ function deleteVersion(version, owner, packageName, token) {
 }
 
 main().catch(error => {
-  console.log("i am here");
   core.setFailed(error.message);
 });
