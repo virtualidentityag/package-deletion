@@ -19,7 +19,8 @@ const main = async () => {
       .then(res => res.json())
       .then(resJson => filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep))
       .then(versions => deleteVersions(versions, owner, packageName, token))
-      .then(versionIds => core.setOutput("versionIds", versionIds));
+      .then(versionIds => core.setOutput("versionIds", versionIds))
+      .catch(error => console.error(error));
 }
 
 function filterVersions(json, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep) {
