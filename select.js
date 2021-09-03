@@ -16,7 +16,15 @@ const main = async () => {
       'authorization': `token ${token}`,
     }
   })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 200) {
+          console.log("[" + res.status + "] Successfully loaded packages");
+          return res.json();
+        } else {
+          console.log("[" + res.status + "] Something went wrong ");
+          return undefined;
+        }
+      })
       .then(resJson => filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep))
       .then(versions => deleteVersions(versions, owner, packageName, token))
       .then(versionIds => core.setOutput("versionIds", versionIds))
@@ -24,6 +32,10 @@ const main = async () => {
 }
 
 function filterVersions(json, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep) {
+  if (json === undefined) {
+    return undefined;
+  }
+
   let mappedData = json.filter(e => {
     return e.metadata.container.tags.length > 0;
   }).map(e => {
