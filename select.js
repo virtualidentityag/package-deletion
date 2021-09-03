@@ -21,14 +21,17 @@ const main = async () => {
           console.log("[" + res.status + "] Successfully loaded packages");
           return res.json();
         } else {
-          console.log("[" + res.status + "] Something went wrong " + res.body);
+          console.log("[" + res.status + "] Something went wrong " + res.json());
           return undefined;
         }
       })
       .then(resJson => filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep))
       .then(versions => deleteVersions(versions, owner, packageName, token))
       .then(versionIds => core.setOutput("versionIds", versionIds))
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error);
+        throw error;
+      });
 }
 
 function filterVersions(json, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep) {
