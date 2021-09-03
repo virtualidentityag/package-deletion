@@ -29,7 +29,7 @@ const main = async () => {
       .then(versionIds => core.setOutput("versionIds", versionIds))
       .catch(error => {
         console.error(error);
-        // throw error;
+        core.setFailed(error.message);
       });
 }
 
