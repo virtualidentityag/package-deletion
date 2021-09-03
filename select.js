@@ -96,7 +96,7 @@ function deleteVersion(version, owner, packageName, token) {
     if (res.status === 204) {
       console.log("[" + res.status + "] Successfully deleted version " + version.version);
     } else {
-      console.log("[" + res.status + "] Something went wrong for version " + version.version)
+      console.error("[" + res.status + "] Something went wrong for version " + version.version)
     }
   });
 }
