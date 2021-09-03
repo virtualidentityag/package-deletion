@@ -1,4 +1,4 @@
-name: 'Package version selector'
+name: 'Package deletion'
 description: '...'
 inputs:
   owner:
@@ -17,11 +17,11 @@ inputs:
     description: "Number of versions to keep"
     required: true
   github-token:
-    description: "Github token (use secrets.GITHUB_TOKEN)"
+    description: "Github token (use secrets.GH_PACKAGES_DELETE)"
     required: true
 outputs:
   versionIds:
-    description: 'Array of selected version ids'
+    description: 'Array of deleted version ids'
 runs:
   using: 'node12'
   main: 'select.js'
