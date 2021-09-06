@@ -10,14 +10,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: virtualidentityag/package-version-selector@update-for-registry
-      id: version-selector
-      with:
-        owner: virtualidentityag
-        github-token: ${{ secrets.TOKEN }} # fake token use GH_PACKAGES_DELETE if you want to test
-        package: "infineon-myinfineon-service/infineon-myinfineon-service"
-        number-of-release-candidates-to-keep: 5
-        number-of-snapshots-to-keep: 5
-        number-of-feature-snapshots-to-keep: 3
-
-    - run: echo ${{ steps.version-selector.outputs.versionIds }}
+    - name: tests
+      run: npm run test
