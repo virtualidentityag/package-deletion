@@ -5,9 +5,15 @@
         "type": "git",
         "url": "git://github.com/bdruesedow/package-version-selector.git"
     },
+    "scripts": {
+        "test": "jest"
+    },
     "dependencies": {
         "@actions/core": "^1.2.3",
         "@actions/github": "^2.1.1",
         "isomorphic-fetch": "^2.2.1"
+    },
+    "devDependencies": {
+        "jest": "^27.1.0"
     }
 }

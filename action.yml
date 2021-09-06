@@ -1,28 +1,27 @@
-name: 'Package version selector'
+name: 'Package deletion'
 description: '...'
 inputs:
   owner:
     description: "Repository owner or organization"
     required: true
-  repository:
-    description: "Repository name"
-    required: true
   package:
     description: "Package name"
     required: true
-  filter:
-    description: 'Filter string to get versions by name (optional)'
-    required: false
-  keep:
-    description: "Number of versions to keep (default: 5)(optional)"
-    reqired: false
-    default: 5
+  number-of-release-candidates-to-keep:
+    description: "Number of versions to keep"
+    required: true
+  number-of-snapshots-to-keep:
+    description: "Number of versions to keep"
+    required: true
+  number-of-feature-snapshots-to-keep:
+    description: "Number of versions to keep"
+    required: true
   github-token:
-    description: "Github token (use secrets.GITHUB_TOKEN)"
+    description: "Github token (use secrets.GH_PACKAGES_DELETE)"
     required: true
 outputs:
-  versionids:
-    description: 'Array of selected version ids'
+  versionIds:
+    description: 'Array of deleted version ids'
 runs:
   using: 'node12'
   main: 'select.js'

@@ -10,15 +10,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: virtualidentityag/package-version-selector@master
-      id: version-selector
-      with:
-        owner: virtualidentityag
-        repository: ${{ github.repository }}
-        github-token: ${{ secrets.github_token }}
-        package: "package-version-selector"
-        keep: 1
-        filter: "SNAPSHOT-"
+    - name: install
+      run: npm install
 
-    - run: echo ::set-env name=APPENDIX::${{ steps.version-selector.outputs.versionids }}
-    - run: echo ${{ env.APPENDIX }}
+    - name: tests
+      run: npm run test
