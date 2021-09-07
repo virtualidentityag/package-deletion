@@ -19,6 +19,14 @@ inputs:
   github-token:
     description: "Github token (use secrets.GH_PACKAGES_DELETE)"
     required: true
+  package-type:
+    description: "Type of the package (use maven for infineon-com and container for microservices, defaults to container)"
+    default: container
+    required: false
+  version-names:
+    description: "Comma seperated list of version names to delete. If set then these specific versions will be deleted. (defaults to empty string)"
+    default: ""
+    required: false
 outputs:
   versionIds:
     description: 'Array of deleted version ids'
