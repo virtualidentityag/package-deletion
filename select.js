@@ -12,6 +12,12 @@ const main = async () => {
   const packageType = core.getInput('package-type');
   const versionNames = core.getInput('version-names');
 
+  if (versionNames === undefined || versionNames === "") {
+    if (numberOfRcToKeep === undefined || numberOfRcToKeep === "" || numberOfSnapshotsToKeep === undefined || numberOfSnapshotsToKeep === "" || numberOfFeatureSnapshotsToKeep === undefined || numberOfFeatureSnapshotsToKeep === "") {
+      core.setFailed("versionNames is not given. Therefore number-of-release-candidates-to-keep, number-of-snapshots-to-keep, number-of-feature-snapshots-to-keep must be set");
+    }
+  }
+
   fetch('https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal', {
     method: 'GET',
     headers: {
@@ -28,7 +34,7 @@ const main = async () => {
         }
       })
       .then(resJson => {
-        if (versionNames !== undefined || versionNames !== "") {
+        if (versionNames !== undefined && versionNames !== "") {
           return filterVersionsByName(resJson, versionNames, packageType);
         } else {
           return filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep, packageType);

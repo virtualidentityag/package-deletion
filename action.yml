@@ -8,14 +8,17 @@ inputs:
     description: "Package name"
     required: true
   number-of-release-candidates-to-keep:
-    description: "Number of versions to keep"
-    required: true
+    description: "Number of versions to keep (defaults to 5, must be set if version-names is not set)"
+    default: "5"
+    required: false
   number-of-snapshots-to-keep:
-    description: "Number of versions to keep"
-    required: true
+    description: "Number of versions to keep (defaults to 5, must be set if version-names is not set)"
+    default: "5"
+    required: false
   number-of-feature-snapshots-to-keep:
-    description: "Number of versions to keep"
-    required: true
+    description: "Number of versions to keep (defaults to 50, must be set if version-names is not set)"
+    default: "50"
+    required: false
   github-token:
     description: "Github token (use secrets.GH_PACKAGES_DELETE)"
     required: true
