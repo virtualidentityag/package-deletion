@@ -15,6 +15,7 @@ const main = async () => {
   if (versionNames === undefined || versionNames === "") {
     if (numberOfRcToKeep === undefined || numberOfRcToKeep === "" || numberOfSnapshotsToKeep === undefined || numberOfSnapshotsToKeep === "" || numberOfFeatureSnapshotsToKeep === undefined || numberOfFeatureSnapshotsToKeep === "") {
       core.setFailed("versionNames is not given. Therefore number-of-release-candidates-to-keep, number-of-snapshots-to-keep, number-of-feature-snapshots-to-keep must be set");
+      return;
     }
   }
 

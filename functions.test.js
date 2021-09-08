@@ -158,6 +158,85 @@ test('filterVersions returns list when there are more versions than to keep', as
   expect(filterVersions(json, "1", "1", "1", "container")).toStrictEqual(expected);
 });
 
+test('filterVersions returns list when there are more versions than to keep when package type is docker', async () => {
+  let json = [
+    {
+      "id": "1",
+      "updated_at": "2019-01-22T06:36:30.188",
+      "metadata": {
+        "docker": {
+          "tags": ["1.0.2-rc-blub"]
+        }
+      }
+    },
+    {
+      "id": "2",
+      "updated_at": "2019-01-21T06:36:30.188",
+      "metadata": {
+        "docker": {
+          "tags": ["1.0.1-rc-blub"]
+        }
+      }
+    },
+    {
+      "id": "3",
+      "updated_at": "2019-01-22T06:36:30.188",
+      "metadata": {
+        "docker": {
+          "tags": ["1.0.2-snapshot"]
+        }
+      }
+    },
+    {
+      "id": "4",
+      "updated_at": "2019-01-22T06:36:30.188",
+      "metadata": {
+        "docker": {
+          "tags": ["1.0.1-snapshot"]
+        }
+      }
+    },
+    {
+      "id": "5",
+      "updated_at": "2019-01-21T06:36:30.188",
+      "metadata": {
+        "docker": {
+          "tags": ["1.0.2-snapshot-blub"]
+        }
+      }
+    },
+    {
+      "id": "6",
+      "updated_at": "2019-01-22T06:36:30.188",
+      "metadata": {
+        "docker": {
+          "tags": ["1.0.1-snapshot-blub"]
+        }
+      }
+    }
+  ];
+
+  let expected = [
+    {
+      "id": "2",
+      "updated_at": "2019-01-21T06:36:30.188",
+      "version": "1.0.1-rc-blub"
+    },
+    {
+      "id": "4",
+      "updated_at": "2019-01-22T06:36:30.188",
+      "version": "1.0.1-snapshot"
+    },
+    {
+      "id": "5",
+      "updated_at": "2019-01-21T06:36:30.188",
+      "version": "1.0.2-snapshot-blub"
+    }
+  ]
+
+  expect(filterVersions(json, "1", "1", "1", "docker")).toStrictEqual(expected);
+});
+
 test('filterVersions returns list when there are more versions than to keep and package type is maven', async () => {
   let json = [
     {
@@ -299,6 +378,30 @@ test('filterVersionsByName returns list when names match - container', async () 
   ]
 
   expect(filterVersionsByName(json, "1.0.2-rc-blub", "container")).toStrictEqual(expected);
+});
+
+test('filterVersionsByName returns list when names match - docker', async () => {
+  let json = [
+    {
+      "id": "1",
+      "updated_at": "2019-01-22T06:36:30.188",
+      "metadata": {
+        "docker": {
+          "tags": ["1.0.2-rc-blub"]
+        }
+      }
+    }
+  ];
+
+  let expected = [
+    {
+      "id": "1",
+      "updated_at": "2019-01-22T06:36:30.188",
+      "version": "1.0.2-rc-blub"
+    }
+  ]
+
+  expect(filterVersionsByName(json, "1.0.2-rc-blub", "docker")).toStrictEqual(expected);
 });
 
 test('filterVersionsByName returns list when one match by multiples given - maven', async () => {

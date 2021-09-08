@@ -4,8 +4,12 @@ function filterVersions(json, numberOfRcToKeep, numberOfSnapshotsToKeep, numberO
   }
 
   let mappedData;
-  if (packageType === "maven") {
-    mappedData = json.map(e => mapMavenVersionData(e));
+  if (packageType === "maven" || packageType === "npm") {
+    mappedData = json.map(e => mapMavenOrNpmVersionData(e));
+  } else if (packageType === "docker") {
+    mappedData = json
+        .filter(e => e.metadata.docker.tags.length > 0)
+        .map(e => mapDockerVersionData(e));
   } else {
     mappedData = json
         .filter(e => e.metadata.container.tags.length > 0)
@@ -35,7 +39,7 @@ function sortByDateDescending(a, b) {
   return new Date(b.updated_at) - new Date(a.updated_at);
 }
 
-function mapMavenVersionData(e) {
+function mapMavenOrNpmVersionData(e) {
   let data = {};
   data.id = e.id;
   data.version = e.name;
@@ -53,6 +57,15 @@ function mapContainerVersionData(e) {
   return data;
 }
 
+function mapDockerVersionData(e) {
+  let data = {};
+  data.id = e.id;
+  data.version = e.metadata.docker.tags[0];
+  data.updated_at = e.updated_at;
+
+  return data;
+}
+
 function filterVersionsByName(json, versionNames, packageType) {
   if (json === undefined) {
     return undefined;
@@ -63,18 +76,20 @@ function filterVersionsByName(json, versionNames, packageType) {
     return undefined;
   }
 
-  if (packageType === "maven") {
-    return filterMavenVersionsByName(json, versionsSplit);
+  if (packageType === "maven" || packageType === "npm") {
+    return filterMavenOrNpmVersionsByName(json, versionsSplit);
+  } else if (packageType === "docker") {
+    return filterDockerVersionsByName(json, versionsSplit);
   } else {
     return filterContainerVersionsByName(json, versionsSplit);
   }
 }
 
-function filterMavenVersionsByName(json, versions) {
+function filterMavenOrNpmVersionsByName(json, versions) {
   return json
       .filter(e => versions.includes(e.name))
       .map(e => {
-        return mapMavenVersionData(e);
+        return mapMavenOrNpmVersionData(e);
       });
 }
 
@@ -83,6 +98,13 @@ function filterContainerVersionsByName(json, versions) {
       .filter(e => e.metadata.container.tags.length > 0)
       .filter(e => versions.includes(e.metadata.container.tags[0]))
       .map(e => mapContainerVersionData(e));
+}
+
+function filterDockerVersionsByName(json, versions) {
+  return json
+      .filter(e => e.metadata.docker.tags.length > 0)
+      .filter(e => versions.includes(e.metadata.docker.tags[0]))
+      .map(e => mapDockerVersionData(e));
 }
 
 function deleteVersions(versions, owner, packageName, token, packageType) {
