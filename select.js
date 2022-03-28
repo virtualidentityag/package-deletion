@@ -19,7 +19,7 @@ const main = async () => {
     }
   }
 
-  fetch('https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal', {
+  fetch('https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '?package_type=' + packageType + '&visibility=internal', {
     method: 'GET',
     headers: {
       'Accept': 'application/vnd.github.v3+json',
