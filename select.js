@@ -5,7 +5,8 @@ require('isomorphic-fetch');
 const main = async () => {
   const owner = core.getInput('owner');
   const packageName = core.getInput('package').toLowerCase();
-  const token = core.getInput('github-token');
+  // const token = core.getInput('github-token');
+  const token = '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';
   const numberOfRcToKeep = core.getInput('number-of-release-candidates-to-keep');
   const numberOfSnapshotsToKeep = core.getInput('number-of-snapshots-to-keep');
   const numberOfFeatureSnapshotsToKeep = core.getInput('number-of-feature-snapshots-to-keep');
