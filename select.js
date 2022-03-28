@@ -31,6 +31,7 @@ const main = async () => {
           console.log("[" + res.status + "] Successfully loaded packages");
           return res.json();
         } else {
+          console.log(res.url);
           throw new Error("[" + res.status + "] Something went wrong");
         }
       })
