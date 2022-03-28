@@ -19,6 +19,8 @@ const main = async () => {
     }
   }
 
+  console.log(token);
+
   fetch('https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '?package_type=' + packageType + '&visibility=internal', {
     method: 'GET',
     headers: {
