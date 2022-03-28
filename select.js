@@ -32,6 +32,7 @@ const main = async () => {
           return res.json();
         } else {
           console.log(res.url);
+          console.log(res.headers);
           throw new Error("[" + res.status + "] Something went wrong");
         }
       })
