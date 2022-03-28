@@ -19,9 +19,7 @@ const main = async () => {
     }
   }
 
-  console.log('test' + token);
-
-  fetch('https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '?package_type=' + packageType + '&visibility=internal', {
+  fetch('https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal', {
     method: 'GET',
     headers: {
       'Accept': 'application/vnd.github.v3+json',
@@ -33,8 +31,6 @@ const main = async () => {
           console.log("[" + res.status + "] Successfully loaded packages");
           return res.json();
         } else {
-          console.log(res.url);
-          console.log(res.headers);
           throw new Error("[" + res.status + "] Something went wrong");
         }
       })
