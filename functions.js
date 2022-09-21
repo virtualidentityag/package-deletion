@@ -29,6 +29,8 @@ function filterVersions(json, numberOfRcToKeep, numberOfSnapshotsToKeep, numberO
 }
 
 function filterSortAndSlice(mappedData, regex, numberToKeep) {
+  console.log("mappedData: ");
+  console.log(mappedData);
   const filteredSorted = mappedData
       .filter(e => e.version.match(regex) !== null)
       .sort((a, b) => sortByDateDescending(a, b))
