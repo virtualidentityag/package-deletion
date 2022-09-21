@@ -43,6 +43,10 @@ function sortByDateDescending(a, b) {
 }
 
 function mapMavenOrNpmVersionData(e) {
+
+  console.log('entity from mapMavenOrNpmVersionData');
+  console.log(e);
+
   let data = {};
   data.id = e.id;
   data.version = e.name;
