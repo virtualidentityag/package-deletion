@@ -19,21 +19,32 @@ const main = async () => {
     }
   }
 
-  fetch('https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal', {
+  const packageUrl = 'https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal&per_page=100';
+  const getWithAuthorization = {
     method: 'GET',
     headers: {
       'Accept': 'application/vnd.github.v3+json',
       'authorization': `token ${token}`,
     }
-  })
-      .then(res => {
-        if (res.status === 200) {
-          console.log("[" + res.status + "] Successfully loaded packages");
-          return res.json();
-        } else {
-          throw new Error("[" + res.status + "] Something went wrong");
-        }
-      })
+  };
+
+  Promise.all([
+    fetch(packageUrl + '&page=' + 1, getWithAuthorization),
+    fetch(packageUrl + '&page=' + 2, getWithAuthorization)
+  ])
+      .then(results =>
+          results.map(
+              res => {
+                if (res.status === 200) {
+                  console.log("[" + res.status + "] Successfully loaded packages");
+                  return res.json();
+                } else {
+                  throw new Error("[" + res.status + "] Something went wrong");
+                }
+              }
+          )
+      )
+      .then(data => data.flat())
       .then(resJson => {
         if (versionNames !== undefined && versionNames !== "") {
           return filterVersionsByName(resJson, versionNames, packageType);
@@ -47,6 +58,7 @@ const main = async () => {
         console.error(error);
         core.setFailed(error.message);
       });
+
 }
 
 main().catch(error => {

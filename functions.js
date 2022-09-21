@@ -29,10 +29,11 @@ function filterVersions(json, numberOfRcToKeep, numberOfSnapshotsToKeep, numberO
 }
 
 function filterSortAndSlice(mappedData, regex, numberToKeep) {
-  return mappedData
+  const filteredSorted = mappedData
       .filter(e => e.version.match(regex) !== null)
       .sort((a, b) => sortByDateDescending(a, b))
-      .slice(numberToKeep, this.length);
+  return filteredSorted
+      .slice(numberToKeep, filteredSorted.length);
 }
 
 function sortByDateDescending(a, b) {
