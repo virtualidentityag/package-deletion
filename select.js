@@ -19,7 +19,7 @@ const main = async () => {
     }
   }
 
-  const packageUrl = 'https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal&per_page=10';
+  const packageUrl = 'https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal&per_page=100';
   const getWithAuthorization = {
     method: 'GET',
     headers: {
@@ -45,7 +45,6 @@ const main = async () => {
 
   Promise.all(packageRequests)
       .then(data => data.flat())
-      .then(result => console.log(result))
       .then(resJson => {
         if (versionNames !== undefined && versionNames !== "") {
           return filterVersionsByName(resJson, versionNames, packageType);
@@ -53,7 +52,7 @@ const main = async () => {
           return filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep, packageType);
         }
       })
-      // .then(versions => deleteVersions(versions, owner, packageName, token, packageType))
+      .then(versions => deleteVersions(versions, owner, packageName, token, packageType))
       .then(versionIds => core.setOutput("versionIds", versionIds))
       .catch(error => {
         console.error(error);
