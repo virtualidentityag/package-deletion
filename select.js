@@ -43,6 +43,9 @@ const main = async () => {
   }
 
   Promise.all(requests)
+      .then(results => results.map(
+          result => result.json()
+      ))
       .then(data => data.flat())
       .then(data => console.log(data))
       .then(resJson => {
