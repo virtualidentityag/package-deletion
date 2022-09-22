@@ -28,22 +28,21 @@ const main = async () => {
     }
   };
 
-  Promise.all([
-    fetch(packageUrl + '&page=' + 1, getWithAuthorization),
-    fetch(packageUrl + '&page=' + 2, getWithAuthorization)
-  ])
-      .then(results =>
-          results.map(
-              async res => {
-                if (res.status === 200) {
-                  console.log("[" + res.status + "] Successfully loaded packages");
-                  await res.json();
-                } else {
-                  throw new Error("[" + res.status + "] Something went wrong");
-                }
-              }
-          )
-      )
+  const requests = [];
+  for (const page of ([1, 2])) {
+    requests.push(fetch(
+        packageUrl + '&page=' + page, getWithAuthorization
+    ).then((res) => {
+      if (res.status === 200) {
+        console.log("[" + res.status + "] Successfully loaded packages");
+        res.json();
+      } else {
+        throw new Error("[" + res.status + "] Something went wrong");
+      }
+    }));
+  }
+
+  Promise.all(requests)
       .then(data => data.flat())
       .then(resJson => {
         if (versionNames !== undefined && versionNames !== "") {
