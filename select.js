@@ -32,10 +32,10 @@ const main = async () => {
   for (const page of ([1, 2])) {
     requests.push(
         fetch(packageUrl + '&page=' + page, getWithAuthorization)
-            .then((res) => {
+            .then(async (res) => {
               if (res.status === 200) {
                 console.log("[" + res.status + "] Successfully loaded packages");
-                res.json();
+                await res.json();
               } else {
                 throw new Error("[" + res.status + "] Something went wrong");
               }
@@ -47,7 +47,6 @@ const main = async () => {
           result => console.log(result)
       ))
       .then(data => data.flat())
-      .then(data => console.log(data))
       .then(resJson => {
         if (versionNames !== undefined && versionNames !== "") {
           return filterVersionsByName(resJson, versionNames, packageType);
