@@ -29,8 +29,6 @@ function filterVersions(json, numberOfRcToKeep, numberOfSnapshotsToKeep, numberO
 }
 
 function filterSortAndSlice(mappedData, regex, numberToKeep) {
-  console.log("mappedData: ");
-  console.log(mappedData);
   const filteredSorted = mappedData
       .filter(e => e.version.match(regex) !== null)
       .sort((a, b) => sortByDateDescending(a, b))
@@ -43,10 +41,6 @@ function sortByDateDescending(a, b) {
 }
 
 function mapMavenOrNpmVersionData(e) {
-
-  console.log('entity from mapMavenOrNpmVersionData');
-  console.log(e);
-
   let data = {};
   data.id = e.id;
   data.version = e.name;
