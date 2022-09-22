@@ -44,10 +44,8 @@ const main = async () => {
   }
 
   Promise.all(packageRequests)
-      .then(results => results.map(
-          result => console.log(result)
-      ))
       .then(data => data.flat())
+      .then(result => console.log(result))
       .then(resJson => {
         if (versionNames !== undefined && versionNames !== "") {
           return filterVersionsByName(resJson, versionNames, packageType);
@@ -55,7 +53,7 @@ const main = async () => {
           return filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep, packageType);
         }
       })
-      .then(versions => deleteVersions(versions, owner, packageName, token, packageType))
+      // .then(versions => deleteVersions(versions, owner, packageName, token, packageType))
       .then(versionIds => core.setOutput("versionIds", versionIds))
       .catch(error => {
         console.error(error);
