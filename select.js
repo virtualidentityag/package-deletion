@@ -32,17 +32,17 @@ const main = async () => {
   for (const page of ([1, 2])) {
     requests.push(
         fetch(packageUrl + '&page=' + page, getWithAuthorization)
-            .then(async (res) => {
+            .then((res) => {
               if (res.status === 200) {
                 console.log("[" + res.status + "] Successfully loaded packages");
-                await res.json();
+                res.json();
               } else {
                 throw new Error("[" + res.status + "] Something went wrong");
               }
             }));
   }
 
-  Promise.all(requests)
+  await Promise.all(requests)
       .then(results => results.map(
           result => console.log(result)
       ))
