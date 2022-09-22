@@ -28,10 +28,11 @@ const main = async () => {
     }
   };
 
-  // const packageRequests = [];
-  // for (const page of ([1, 2])) {
-  //   packageRequests.push(
-  //       fetch(packageUrl + '&page=' + page, getWithAuthorization)
+  const packageRequests = [];
+  for (const page of ([1, 2])) {
+    packageRequests.push(
+        fetch(packageUrl + '&page=' + page, getWithAuthorization)
+            .then((response) => response.json()))
   //           .then(response => {
   //             if (response.status === 200) {
   //               console.log("[" + response.status + "] Successfully loaded packages");
@@ -40,49 +41,26 @@ const main = async () => {
   //               throw new Error("[" + response.status + "] Something went wrong");
   //             }
   //           }));
-  // }
+  }
 
-  const fetchReq1 = fetch(packageUrl + '&page=' + 1, getWithAuthorization).then((response) => {
-    if (response.status === 200) {
-      console.log("[" + response.status + "] Successfully loaded packages");
-      response.json();
-    } else {
-      throw new Error("[" + response.status + "] Something went wrong");
-    }
-  });
-
-  const fetchReq2 = fetch(packageUrl + '&page=' + 2, getWithAuthorization).then((response) => {
-        if (response.status === 200) {
-          console.log("[" + response.status + "] Successfully loaded packages");
-          response.json();
+  Promise.all(packageRequests)
+      .then(results => results.map(
+          result => console.log(result)
+      ))
+      .then(data => data.flat())
+      .then(resJson => {
+        if (versionNames !== undefined && versionNames !== "") {
+          return filterVersionsByName(resJson, versionNames, packageType);
         } else {
-          throw new Error("[" + response.status + "] Something went wrong");
+          return filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep, packageType);
         }
-      }
-  );
-
-  const allData = Promise.all([fetchReq1, fetchReq2]);
-
-  allData.then((res) => console.log(res));
-
-  // await Promise.all(packageRequests)
-  //     .then(results => results.map(
-  //         result => console.log(result)
-  //     ))
-  //     .then(data => data.flat())
-  //     .then(resJson => {
-  //       if (versionNames !== undefined && versionNames !== "") {
-  //         return filterVersionsByName(resJson, versionNames, packageType);
-  //       } else {
-  //         return filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep, packageType);
-  //       }
-  //     })
-  //     .then(versions => deleteVersions(versions, owner, packageName, token, packageType))
-  //     .then(versionIds => core.setOutput("versionIds", versionIds))
-  //     .catch(error => {
-  //       console.error(error);
-  //       core.setFailed(error.message);
-  //     });
+      })
+      .then(versions => deleteVersions(versions, owner, packageName, token, packageType))
+      .then(versionIds => core.setOutput("versionIds", versionIds))
+      .catch(error => {
+        console.error(error);
+        core.setFailed(error.message);
+      });
 
 }
 
