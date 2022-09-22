@@ -34,10 +34,10 @@ const main = async () => {
   ])
       .then(results =>
           results.map(
-              res => {
+              async res => {
                 if (res.status === 200) {
                   console.log("[" + res.status + "] Successfully loaded packages");
-                  res.json();
+                  await res.json();
                 } else {
                   throw new Error("[" + res.status + "] Something went wrong");
                 }
