@@ -42,8 +42,24 @@ const main = async () => {
   //           }));
   // }
 
-  const fetchReq1 = fetch(packageUrl + '&page=' + 1, getWithAuthorization).then((res) => res.json());
-  const fetchReq2 = fetch(packageUrl + '&page=' + 2, getWithAuthorization).then((res) => res.json());
+  const fetchReq1 = fetch(packageUrl + '&page=' + 1, getWithAuthorization).then((response) => {
+    if (response.status === 200) {
+      console.log("[" + response.status + "] Successfully loaded packages");
+      response.json();
+    } else {
+      throw new Error("[" + response.status + "] Something went wrong");
+    }
+  });
+
+  const fetchReq2 = fetch(packageUrl + '&page=' + 2, getWithAuthorization).then((response) => {
+        if (response.status === 200) {
+          console.log("[" + response.status + "] Successfully loaded packages");
+          response.json();
+        } else {
+          throw new Error("[" + response.status + "] Something went wrong");
+        }
+      }
+  );
 
   const allData = Promise.all([fetchReq1, fetchReq2]);
 
