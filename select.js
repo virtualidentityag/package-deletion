@@ -35,7 +35,7 @@ const main = async () => {
             .then((res) => {
               if (res.status === 200) {
                 console.log("[" + res.status + "] Successfully loaded packages");
-                return res.json();
+                res.json();
               } else {
                 throw new Error("[" + res.status + "] Something went wrong");
               }
@@ -44,7 +44,7 @@ const main = async () => {
 
   Promise.all(requests)
       .then(results => results.map(
-          result => result.json()
+          result => console.log(result)
       ))
       .then(data => data.flat())
       .then(data => console.log(data))
