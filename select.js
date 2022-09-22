@@ -44,6 +44,7 @@ const main = async () => {
 
   Promise.all(requests)
       .then(data => data.flat())
+      .then(data => console.log(data))
       .then(resJson => {
         if (versionNames !== undefined && versionNames !== "") {
           return filterVersionsByName(resJson, versionNames, packageType);
