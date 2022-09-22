@@ -19,7 +19,7 @@ const main = async () => {
     }
   }
 
-  const packageUrl = 'https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal&per_page=100';
+  const packageUrl = 'https://api.github.com/orgs/' + owner + '/packages/' + packageType + '/' + encodeURIComponent(packageName) + '/versions?package_type=' + packageType + '&visibility=internal&per_page=10';
   const getWithAuthorization = {
     method: 'GET',
     headers: {
@@ -28,38 +28,45 @@ const main = async () => {
     }
   };
 
-  const requests = [];
-  for (const page of ([1, 2])) {
-    requests.push(
-        fetch(packageUrl + '&page=' + page, getWithAuthorization)
-            .then((res) => {
-              if (res.status === 200) {
-                console.log("[" + res.status + "] Successfully loaded packages");
-                res.json();
-              } else {
-                throw new Error("[" + res.status + "] Something went wrong");
-              }
-            }));
-  }
+  // const packageRequests = [];
+  // for (const page of ([1, 2])) {
+  //   packageRequests.push(
+  //       fetch(packageUrl + '&page=' + page, getWithAuthorization)
+  //           .then(response => {
+  //             if (response.status === 200) {
+  //               console.log("[" + response.status + "] Successfully loaded packages");
+  //               response.json();
+  //             } else {
+  //               throw new Error("[" + response.status + "] Something went wrong");
+  //             }
+  //           }));
+  // }
 
-  await Promise.all(requests)
-      .then(results => results.map(
-          result => console.log(result)
-      ))
-      .then(data => data.flat())
-      .then(resJson => {
-        if (versionNames !== undefined && versionNames !== "") {
-          return filterVersionsByName(resJson, versionNames, packageType);
-        } else {
-          return filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep, packageType);
-        }
-      })
-      .then(versions => deleteVersions(versions, owner, packageName, token, packageType))
-      .then(versionIds => core.setOutput("versionIds", versionIds))
-      .catch(error => {
-        console.error(error);
-        core.setFailed(error.message);
-      });
+  const fetchReq1 = fetch(packageUrl + '&page=' + 1, getWithAuthorization).then((res) => res.json());
+  const fetchReq2 = fetch(packageUrl + '&page=' + 2, getWithAuthorization).then((res) => res.json());
+
+  const allData = Promise.all([fetchReq1, fetchReq2]);
+
+  allData.then((res) => console.log(res));
+
+  // await Promise.all(packageRequests)
+  //     .then(results => results.map(
+  //         result => console.log(result)
+  //     ))
+  //     .then(data => data.flat())
+  //     .then(resJson => {
+  //       if (versionNames !== undefined && versionNames !== "") {
+  //         return filterVersionsByName(resJson, versionNames, packageType);
+  //       } else {
+  //         return filterVersions(resJson, numberOfRcToKeep, numberOfSnapshotsToKeep, numberOfFeatureSnapshotsToKeep, packageType);
+  //       }
+  //     })
+  //     .then(versions => deleteVersions(versions, owner, packageName, token, packageType))
+  //     .then(versionIds => core.setOutput("versionIds", versionIds))
+  //     .catch(error => {
+  //       console.error(error);
+  //       core.setFailed(error.message);
+  //     });
 
 }
 
