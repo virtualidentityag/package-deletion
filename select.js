@@ -32,15 +32,14 @@ const main = async () => {
   for (const page of ([1, 2])) {
     packageRequests.push(
         fetch(packageUrl + '&page=' + page, getWithAuthorization)
-            .then((response) => response.json()))
-  //           .then(response => {
-  //             if (response.status === 200) {
-  //               console.log("[" + response.status + "] Successfully loaded packages");
-  //               response.json();
-  //             } else {
-  //               throw new Error("[" + response.status + "] Something went wrong");
-  //             }
-  //           }));
+            .then(response => {
+              if (response.status === 200) {
+                console.log("[" + response.status + "] Successfully loaded packages");
+                return response.json();
+              } else {
+                throw new Error("[" + response.status + "] Something went wrong");
+              }
+            }));
   }
 
   Promise.all(packageRequests)
